@@ -35,6 +35,7 @@ from m5.params import (
     Param,
     VectorParam,
 )
+from m5.SimObject import cxxMethod
 
 
 class RiscvInterrupts(BaseInterrupts):
@@ -47,6 +48,37 @@ class RiscvInterrupts(BaseInterrupts):
         [], "list of local interrupt ids"
     )
     nmi_cause = Param.Int(0, "Non-maskable interrupt(NMI) cause")
+
+    @cxxMethod
+    def post(self, int_num, index):
+        pass
+
+    @cxxMethod
+    def newInterrupt(self, int_num, index):
+        pass
+    @cxxMethod
+    def raiseInterruptPin(self, num):
+        pass
+
+    @cxxMethod
+    def getInterrupt(self):
+        pass
+
+    @cxxMethod
+    def clear(self, int_num, index):
+        pass
+
+    @cxxMethod
+    def clearAll(self):
+        pass
+
+    @cxxMethod
+    def checkInterrupt(self, num):
+        pass
+
+    @cxxMethod
+    def checkInterrupts(self):
+        pass
 
 
 add_citation(

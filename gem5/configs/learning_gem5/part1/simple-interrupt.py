@@ -31,8 +31,8 @@ X86 ISA). More detailed documentation can be found in `simple.py`.
 
 import m5
 from m5.objects import *
-
-
+from m5.objects.InterruptBridge import InterruptBridge
+from m5.objects.InterruptGenerator import InterruptGenerator
 
 system = System()
 
@@ -49,7 +49,14 @@ system.membus = SystemXBar()
 system.cpu.icache_port = system.membus.cpu_side_ports
 system.cpu.dcache_port = system.membus.cpu_side_ports
 
+system.plic = Plic(n_src=31)
+system.membus.mem_side_ports = system.plic.pio
 system.cpu.createInterruptController()
+
+system.interrupt_bridge = InterruptBridge(interrupt_id=1, platform=system.plic)
+system.interrupt_generator = InterruptGenerator(
+    interrupt_latency='1ms'
+)
 
 system.mem_ctrl = MemCtrl()
 system.mem_ctrl.dram = DDR3_1600_8x8()
@@ -75,18 +82,10 @@ system.cpu.createThreads()
 root = Root(full_system=False, system=system)
 m5.instantiate()
 
-def newInterrupt(num):
-    system.cpu.interrupts[0].raiseInterruptPin(num)
-    print("check interrupt for " + str(num + 16) + " is " + str(system.cpu.interrupts[0].checkInterrupt(num + 16)))
-    # system.cpu.interrupts[0].getInterrupt()
+system.plic.int_pin = system.cpu.get_int_pin()
+system.plic.add_int_dev(system.interrupt_bridge)
+system.interrupt_generator.interrupt_pin = system.interrupt_bridge.interrupt_pin
 
-
-# system.cpu.interrupts[0].raiseInterruptPin(7)
-# print(system.cpu.interrupts[0].getInterrupt().name())
 print(f"Beginning simulation!")
 exit_event = m5.simulate()
-newInterrupt(0)
-# print(f"{type(system.cpu.interrupts[0])}")
-
 print(f"Exiting @ tick {m5.curTick()} because {exit_event.getCause()}")
-

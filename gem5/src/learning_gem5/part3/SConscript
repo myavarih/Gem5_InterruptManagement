@@ -1,0 +1,6 @@
+Import('*')
+
+SimObject('InterruptGenerator.py', sim_objects=['InterruptGenerator'])
+Source('InterruptGenerator.cc')
+SimObject('InterruptBridge.py', sim_objects=['InterruptBridge'])
+Source('InterruptBridge.cc')

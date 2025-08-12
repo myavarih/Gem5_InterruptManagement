@@ -278,7 +278,7 @@ class BaseCPU : public ClockedObject
     bool
     checkInterrupts(ThreadID tid) const
     {
-        return FullSystem && interrupts[tid]->checkInterrupts();
+        return interrupts[tid]->checkInterrupts();
     }
 
   protected:

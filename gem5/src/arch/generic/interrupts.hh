@@ -79,6 +79,12 @@ class BaseInterrupts : public SimObject
     }
 
     virtual void
+    newInterrupt(int int_num, int index)
+    {
+        panic("Interrupts::newInterrupt unimplemented!\n");
+    }
+
+    virtual void
     clear(int int_num, int index)
     {
         panic("Interrupts::clear unimplemented!\n");

@@ -32,8 +32,6 @@ X86 ISA). More detailed documentation can be found in `simple.py`.
 import m5
 from m5.objects import *
 
-
-
 system = System()
 
 system.clk_domain = SrcClockDomain()
@@ -75,18 +73,6 @@ system.cpu.createThreads()
 root = Root(full_system=False, system=system)
 m5.instantiate()
 
-def newInterrupt(num):
-    system.cpu.interrupts[0].raiseInterruptPin(num)
-    print("check interrupt for " + str(num + 16) + " is " + str(system.cpu.interrupts[0].checkInterrupt(num + 16)))
-    # system.cpu.interrupts[0].getInterrupt()
-
-
-# system.cpu.interrupts[0].raiseInterruptPin(7)
-# print(system.cpu.interrupts[0].getInterrupt().name())
 print(f"Beginning simulation!")
 exit_event = m5.simulate()
-newInterrupt(0)
-# print(f"{type(system.cpu.interrupts[0])}")
-
 print(f"Exiting @ tick {m5.curTick()} because {exit_event.getCause()}")
-

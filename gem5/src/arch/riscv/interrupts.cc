@@ -169,10 +169,11 @@ Interrupts::globalMask() const
 Fault
 Interrupts::getInterrupt()
 {
-    assert(checkInterrupts());
-    if (checkNonMaskableInterrupt())
-        return std::make_shared<NonMaskableInterruptFault>(nmi_cause);
-    std::bitset<NumInterruptTypes> mask = globalMask();
+    printf("running getInterrupt");
+    // assert(checkInterrupts());
+    // if (checkNonMaskableInterrupt())
+    //     return std::make_shared<NonMaskableInterruptFault>(nmi_cause);
+    // std::bitset<NumInterruptTypes> mask = globalMask();
     if (((ISA*) tc->getIsaPtr())->rvType() == RV64) {
         const std::vector<int> interrupt_order {
             INT_LOCAL_47, INT_LOCAL_46, INT_LOCAL_45, INT_LOCAL_44,
@@ -195,7 +196,7 @@ Interrupts::getInterrupt()
             INT_SOFTWARE_VIRTUAL_SUPER, INT_TIMER_VIRTUAL_SUPER
         };
         for (const int &id : interrupt_order) {
-            if (checkInterrupt(id) && mask[id]) {
+            if (checkInterrupt(id) /*&& mask[id]*/) {
                 return std::make_shared<InterruptFault>(id);
             }
         }
@@ -209,7 +210,7 @@ Interrupts::getInterrupt()
             INT_EXT_SUPER, INT_SOFTWARE_SUPER, INT_TIMER_SUPER
         };
         for (const int &id : interrupt_order) {
-            if (checkInterrupt(id) && mask[id]) {
+            if (checkInterrupt(id) /*&& mask[id]*/) {
                 return std::make_shared<InterruptFault>(id);
             }
         }
@@ -226,7 +227,29 @@ Interrupts::post(int int_num, int index)
     } else {
         postNMI();
     }
+    printf("Interrupt %d:%d posted\n", int_num, index);
+
 }
+
+// void
+// Interrupts::newInterrupt(int int_num, int index)
+// {
+//     raiseInterruptPin(int_num);
+
+//     if(checkInterrupt(int_num + 16))
+//     {
+//         printf("Interrupt %d raised\n", int_num + 16);
+//     }
+
+//     printf("result: %d", checkInterrupt(int_num + 16));
+
+//     Fault fault = getInterrupt();
+//     printf("Interrupt %s raised\n", fault->name());
+
+//     printf("handleInterrupt: %s\n", fault->name());
+
+//     clear(int_num + 16, index);
+// }
 
 void
 Interrupts::clear(int int_num, int index)
@@ -237,12 +260,14 @@ Interrupts::clear(int int_num, int index)
     } else {
         clearNMI();
     }
+    printf("Interrupt %d:%d cleared\n", int_num, index);
 }
 
 void
 Interrupts::clearAll()
 {
     DPRINTF(Interrupt, "All interrupts cleared\n");
+    printf("All Interrupts Cleared!");
     ip = 0;
     clearNMI();
 }
@@ -250,6 +275,7 @@ Interrupts::clearAll()
 void
 Interrupts::raiseInterruptPin(uint32_t num)
 {
+    printf("raiseInterruptPin running for: %d", num);
     tc->getCpuPtr()->postInterrupt(tc->threadId(), num + 16, 0);
 }
 

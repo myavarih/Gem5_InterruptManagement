@@ -102,6 +102,8 @@ class Interrupts : public BaseInterrupts
 
     void post(int int_num, int index) override;
 
+    // void newInterrupt(int int_num, int index);
+
     void clear(int int_num, int index) override;
 
     void postNMI() { tc->setMiscReg(MISCREG_NMIP, 1); }
