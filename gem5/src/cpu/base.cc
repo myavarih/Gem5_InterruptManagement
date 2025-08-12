@@ -236,7 +236,7 @@ BaseCPU::~BaseCPU()
 void
 BaseCPU::postInterrupt(ThreadID tid, int int_num, int index)
 {
-    printf("postInterrupt in BaseCPU running with: tid: %d / int_num: %d / index: %d", tid, int_num, index);
+    printf("\033[34mpostInterrupt in BaseCPU running with: tid: %d / int_num: %d / index: %d\33[0m\n", tid, int_num, index);
     interrupts[tid]->post(int_num, index);
     // // Only wake up syscall emulation if it is not waiting on a futex.
     // // This is to model the fact that instructions such as ARM SEV

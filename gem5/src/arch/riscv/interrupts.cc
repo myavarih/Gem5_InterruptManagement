@@ -227,29 +227,9 @@ Interrupts::post(int int_num, int index)
     } else {
         postNMI();
     }
-    printf("Interrupt %d:%d posted\n", int_num, index);
+    printf("\033[34mInterrupt %d:%d posted\33[0m\n", int_num, index);
 
 }
-
-// void
-// Interrupts::newInterrupt(int int_num, int index)
-// {
-//     raiseInterruptPin(int_num);
-
-//     if(checkInterrupt(int_num + 16))
-//     {
-//         printf("Interrupt %d raised\n", int_num + 16);
-//     }
-
-//     printf("result: %d", checkInterrupt(int_num + 16));
-
-//     Fault fault = getInterrupt();
-//     printf("Interrupt %s raised\n", fault->name());
-
-//     printf("handleInterrupt: %s\n", fault->name());
-
-//     clear(int_num + 16, index);
-// }
 
 void
 Interrupts::clear(int int_num, int index)
@@ -260,14 +240,14 @@ Interrupts::clear(int int_num, int index)
     } else {
         clearNMI();
     }
-    printf("Interrupt %d:%d cleared\n", int_num, index);
+    printf("\033[34mInterrupt %d:%d cleared\33[0m\n", int_num, index);
 }
 
 void
 Interrupts::clearAll()
 {
     DPRINTF(Interrupt, "All interrupts cleared\n");
-    printf("All Interrupts Cleared!");
+    printf("\033[34mAll interrupts cleared!\33[0m\n");
     ip = 0;
     clearNMI();
 }
@@ -275,7 +255,7 @@ Interrupts::clearAll()
 void
 Interrupts::raiseInterruptPin(uint32_t num)
 {
-    printf("raiseInterruptPin running for: %d", num);
+    printf("\033[34mRunnig 'raiseInterruptPin(%d)'...\33[0m\n", num);
     tc->getCpuPtr()->postInterrupt(tc->threadId(), num + 16, 0);
 }
 
@@ -313,6 +293,19 @@ Interrupts::getPort(const std::string &if_name, PortID idx)
     } else {
         return BaseInterrupts::getPort(if_name, idx);
     }
+}
+
+//I'm adding the method to manually check for all interrupt types
+int
+Interrupts::checkForInterrupts()
+{
+    printf("\033[34mRunnig 'checkForInterrupts'...\33[0m\n");
+    for(int i = 0; i < INT_NMI; i++)
+    {
+        if(ip[i] == true)
+            return i;
+    }
+    return -1;
 }
 
 } // namespace RiscvISA

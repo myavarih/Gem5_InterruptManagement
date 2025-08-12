@@ -102,8 +102,6 @@ class Interrupts : public BaseInterrupts
 
     void post(int int_num, int index) override;
 
-    // void newInterrupt(int int_num, int index);
-
     void clear(int int_num, int index) override;
 
     void postNMI() { tc->setMiscReg(MISCREG_NMIP, 1); }
@@ -133,6 +131,9 @@ class Interrupts : public BaseInterrupts
 
     void raiseInterruptPin(uint32_t num);
     void lowerInterruptPin(uint32_t num) {};
+
+    // I'm Adding this method to manually check for interrupts
+    int checkForInterrupts();
 };
 
 } // namespace RiscvISA

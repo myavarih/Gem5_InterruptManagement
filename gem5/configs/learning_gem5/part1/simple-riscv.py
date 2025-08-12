@@ -31,6 +31,7 @@ X86 ISA). More detailed documentation can be found in `simple.py`.
 
 import m5
 from m5.objects import *
+import time
 
 
 
@@ -62,7 +63,7 @@ thispath = os.path.dirname(os.path.realpath(__file__))
 binary = os.path.join(
     thispath,
     "../../../",
-    "tests/test-progs/hello/bin/riscv/linux/hello",
+    "configs/project8/2SecJob",
 )
 
 system.workload = SEWorkload.init_compatible(binary)
@@ -76,17 +77,24 @@ root = Root(full_system=False, system=system)
 m5.instantiate()
 
 def newInterrupt(num):
+    print("\033[32mlets raise an interrupts...\33[0m\n")
     system.cpu.interrupts[0].raiseInterruptPin(num)
-    print("check interrupt for " + str(num + 16) + " is " + str(system.cpu.interrupts[0].checkInterrupt(num + 16)))
-    # system.cpu.interrupts[0].getInterrupt()
+    print("\033[32mlets check interrupts...\33[0m\n")
+    fin = system.cpu.interrupts[0].checkForInterrupts()
+    if (fin == -1):
+        print("\033[31mno interrupt found\33[0m\n")
+    else:
+        print(f"\033[32mfound interrupt at: {fin}\33[0m\n")
 
 
-# system.cpu.interrupts[0].raiseInterruptPin(7)
-# print(system.cpu.interrupts[0].getInterrupt().name())
+
 print(f"Beginning simulation!")
+
 exit_event = m5.simulate()
+
+time.sleep(0.5)
+
 newInterrupt(0)
-# print(f"{type(system.cpu.interrupts[0])}")
 
 print(f"Exiting @ tick {m5.curTick()} because {exit_event.getCause()}")
 

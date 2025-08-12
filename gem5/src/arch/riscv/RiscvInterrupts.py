@@ -80,6 +80,10 @@ class RiscvInterrupts(BaseInterrupts):
     def checkInterrupts(self):
         pass
 
+    @cxxMethod
+    def checkForInterrupts(self):
+        pass
+
 
 add_citation(
     RiscvInterrupts,
