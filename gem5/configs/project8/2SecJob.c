@@ -1,30 +1,34 @@
 #include <stdio.h>
-#include <time.h>
+#include <sys/time.h>
 
 #define MAGENTA "\033[35m"
-#define RESET "\033[0m"
+#define RESET   "\033[0m"
 
-int main() {
-    clock_t start_time = clock();
-    double elapsed_time = 0.0;
-    int dots = 0;
+static double now_sec(void) {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (double)tv.tv_sec + (double)tv.tv_usec / 1e6;
+}
 
-    printf(MAGENTA "Processing" RESET);
+int main(void) {
+    printf(MAGENTA "Processing steps...\n" RESET);
+    fflush(stdout);
 
-    // Loop for ~2 seconds showing animated dots in magenta
-    while (elapsed_time < 2.0) {
-        elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
+    double t0 = now_sec();
+    double step_interval = 3.0 / 20.0;  // 0.15 seconds per step
+    int steps = 0;
 
-        int new_dots = (int)(elapsed_time / 0.4);
-        if (new_dots > dots) {
-            for (int i = 0; i < new_dots - dots; i++) {
-                printf(MAGENTA "." RESET);
-                fflush(stdout);
-            }
-            dots = new_dots;
+    while (steps < 10) {
+        double t = now_sec() - t0;
+        if (t >= steps * step_interval) {
+            printf(MAGENTA "Step %d\n" RESET, steps + 1);
+            fflush(stdout);
+            steps++;
         }
+        // prevent a tight busy loop
+        for (volatile int i = 0; i < 10000; ++i) { }
     }
 
-    printf("\n" MAGENTA "Done! That took about %.2f seconds.\n" RESET, elapsed_time);
+    printf(MAGENTA "Done!\n" RESET);
     return 0;
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2010-2012, 2015, 2017 ARM Limited
  * Copyright (c) 2020 Barkhausen Institut
  * All rights reserved
- *
+  
  * The license below extends only to copyright in the software and shall
  * not be construed as granting a license to any other intellectual
  * property including but not limited to intellectual property relating
@@ -615,6 +615,7 @@ m5Hypercall(ThreadContext *tc, uint64_t hypercall_id)
     exitSimLoopWithHypercall("m5_hypercall instruction encountered", 0,
     curTick(),0, std::map<std::string, std::string>(), hypercall_id, true);
 }
+
 
 } // namespace pseudo_inst
 } // namespace gem5
